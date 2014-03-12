@@ -158,7 +158,7 @@ class Master extends CI_Controller {
 							'pass'		=> $respuesta[0]->pass,
 							'nombre' 	=> $respuesta[0]->nombre,
 							'email'		=> $respuesta[0]->email,
-							'menu_id'	=> $respuesta[0]->menu_id,
+							'menu_id'	=> $respuesta[0]->id_menu_grupo,
 							'activo'		=>  $respuesta[0]->activo
 						) 
 					);
@@ -194,4 +194,76 @@ class Master extends CI_Controller {
 		$this->load->view( 'landing', $datos );
 		$this->load->view( 'footer' );
 	}
+
+
+	/*
+	 * Muestra el cpanel de menu
+	 *
+	 * @return 		view
+	 */
+	public function menu( $selector = 0 ){
+		$data['grupos'] = $this->master_model->get_grupo_menu();
+		$footer[ 'libs' ] = TRUE;
+		$footer[ 'lib_js' ] = array( 
+			'<script src=" ' . base_url() . 'libs/js/menu_grupo.js"></script>' );
+		if( $selector > 0 ){
+			$footer[ 'lib_js' ][] = '<script>$( "#div_' . $selector . '" ).effect( "highlight", {}, 2000 );</script>';
+		}
+
+		
+		$this->load->view( 'header' );
+		$this->load->view( 'nav_menu' );
+		$this->load->view( 'cpanel_menu', $data );
+		$this->load->view( 'menu_grupo_add' );
+		$this->load->view( 'menu_grupo_delete' );
+		$this->load->view( 'menu_grupo_edit' );
+		$this->load->view( 'footer', $footer );
+	}
+
+
+	/*
+	 * Agregar nuevo grupo de menu
+	 *
+	 *	@param 		POST 		$_POST
+	 * @return 		redirect
+	 */
+	public function menu_grupo_add(){
+		if( count( $_POST ) > 0 ){
+			if( $el_ID = $this->master_model->menu_grupo_save() ){
+				redirect( 'master/menu/' . $el_ID, 'refresh' );
+			}
+		}
+		redirect( 'master/info/ko', 'refresh' );
+	}
+
+
+	/*
+	 * Elimina registro del grupo menu
+	 *
+	 *	@param 		POST 		$_POST
+	 * @return 		redirect
+	 */
+	public function menu_grupo_delete(){
+		if( count( $_POST ) > 0 ){
+			if( $this->encrypt->decode( $_POST['id'] ) != 1 ){
+				if( $this->master_model->menu_grupo_delete() ){
+					redirect( 'master/menu/', 'refresh' );
+				}
+			}
+		}
+		redirect( 'master/info/ko', 'refresh' );
+	}
+
+
+	public function menu_grupo_edit(){
+		if( count( $_POST ) > 0 ){
+			if( $this->encrypt->decode( $_POST['id'] ) > 0 ){
+				if( $this->master_model->menu_grupo_update() ){
+					redirect( 'master/menu/', 'refresh' );
+				}
+			}
+		}
+		redirect( 'master/info/ko', 'refresh' );
+	}
+
 }

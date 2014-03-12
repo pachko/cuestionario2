@@ -9,7 +9,7 @@ Class Master_model extends CI_Model{
     */
 	function get_users(){
       $this->db->select( 'users.id, users.`user`, users.pass, users.nombre' );
-      $this->db->select( 'users.email, users.menu_id, users.activo' );
+      $this->db->select( 'users.email, users.id_menu_grupo, users.activo' );
       $this->db->select( 'users_tipo.id AS tipo_ID, users_tipo.nombre AS tipo' );
 		$this->db->from( 'users' );
       $this->db->join( 'users_tipo', 'users.id_users_tipo = users_tipo.id');
@@ -104,6 +104,52 @@ Class Master_model extends CI_Model{
          return true;
       else
          return false;
+   }
+
+
+   /*
+    * Recupera los grupos de menu creados
+    */
+   function get_grupo_menu(){
+      $this->db->from( 'menu_grupo' );
+      $datos = $this->db->get();
+      if( $datos->num_rows > 0 ){
+         return $datos->result();
+      }else{
+         return false;
+      }
+   }
+
+
+   /*
+    * Registra nuevo valor en la tabla menugrupo
+    */
+   function menu_grupo_save(){
+      $tabla = "menu_grupo";
+      if( $this->db->insert( $tabla, $_POST ) ){
+         return $this->db->insert_id();
+      }else{
+         return false;
+      }
+   }
+
+
+   /*
+    * Elimina de la base de datos
+    */
+   function menu_grupo_delete(){
+      if( $this->db->delete( 'menu_grupo', array( 'id' =>  $this->encrypt->decode( $_POST['id'] ) ) ) )
+         return true;
+      else
+         return false;
+   }
+
+
+   function menu_grupo_update(){
+      $this->db->where( 'id', $this->encrypt->decode( $_POST['id'] ) );
+      unset( $_POST['id'] );
+      $this->db->update( 'menu_grupo', $_POST );
+      return true;
    }
 }
 ?>

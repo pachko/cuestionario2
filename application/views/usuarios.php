@@ -37,9 +37,18 @@
 					    	</div>
 					  	</div>
 					  	<div class="form-group">
-					   	<label for="menu_id" class="col-sm-2 control-label">Menu </label>
+					   	<label for="id_users_tipo" class="col-sm-2 control-label">Menu </label>
 					    	<div class="col-sm-10">
-					      	<select class="form-control" name="menu_id" id="menu_id">
+					      	<select class="form-control edit_menu_id" name="id_users_tipo" id="id_users_tipo">
+									<option value="1">Administrador</option>
+								  	<option value="2">Encuestado</option>
+								</select>
+					    	</div>
+					  	</div>
+					  	<div class="form-group">
+					   	<label for="id_menu_grupo" class="col-sm-2 control-label">Menu </label>
+					    	<div class="col-sm-10">
+					      	<select class="form-control" name="id_menu_grupo" id="id_menu_grupo">
 								  <option value="1">1</option>
 								  <option value="2">2</option>
 								  <option value="3">3</option>
@@ -104,10 +113,21 @@
 					      	<input type="email" class="form-control" id="email" name="email" placeholder="Email">
 					    	</div>
 					  	</div>
+
+					  	
 					  	<div class="form-group">
-					   	<label for="menu_id" class="col-sm-2 control-label">Menu </label>
+					   	<label for="id_users_tipo" class="col-sm-2 control-label">Menu </label>
 					    	<div class="col-sm-10">
-					      	<select class="form-control edit_menu_id" name="menu_id" id="menu_id">
+					      	<select class="form-control edit_menu_id" name="id_users_tipo" id="id_users_tipo">
+									<option value="1">Administrador</option>
+								  	<option value="2">Encuestado</option>
+								</select>
+					    	</div>
+					  	</div>
+					  	<div class="form-group">
+					   	<label for="id_menu_grupo" class="col-sm-2 control-label">Menu </label>
+					    	<div class="col-sm-10">
+					      	<select class="form-control edit_menu_id" name="id_menu_grupo" id="id_menu_grupo">
 									<option value="1">1</option>
 								  	<option value="2">2</option>
 								  	<option value="3">3</option>

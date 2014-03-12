@@ -12,6 +12,7 @@
       <ul class="nav navbar-nav">
         <li><a href="<?php echo base_url(); ?>master">Home</a></li>
         <li><a href="<?php echo base_url(); ?>master/usuarios">Usuarios</a></li>
+        <li><a href="<?php echo base_url(); ?>master/menu">Menu</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </div><!-- /.nav-collapse -->
