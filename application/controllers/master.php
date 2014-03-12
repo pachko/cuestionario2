@@ -21,6 +21,7 @@ class Master extends CI_Controller {
 		$this->load->helper('form');
 		$this->load->database();
 		$this->load->model( 'master_model' );
+		$this->load->library('encrypt');
 
 		/*
 		$pr['menu'] = $menu;
@@ -80,6 +81,95 @@ class Master extends CI_Controller {
 		}else{
 			redirect( 'master/info/ko', 'refresh' );
 		}
+	}
+
+
+	/*
+	 *	Actualiza el usuario
+	 *
+	 *	revisa si la contraseña es distinta, de no se la deja tal cual.
+	 *
+	 *	@param 		POST 		$_POST
+	 *	@return 		redirect
+	 */
+	public function usuario_edit(){
+		if( count( $_POST ) > 0 ){
+			#	Verifica si la pass no fue modificada
+			if( !$this->master_model->check_password() ){
+				unset( $_POST['pass'] );
+			}else{
+				$_POST['pass'] = md5( $_POST['pass'] );
+			}
+			if( $this->master_model->update_user() ){
+				redirect( 'master/usuarios/', 'refresh' );
+			}else{
+				redirect( 'master/info/ko', 'refresh' );	
+			}
+		}else{
+			redirect( 'master/info/ko', 'refresh' );
+		}
+	}
+
+
+	/*
+	 *	Elimina de la db el usuario
+	 *	
+	 *	@param 		POST 		$_POST
+	 * @return 		redirect
+	 */
+	public function usuario_delete(){
+		if( count( $_POST ) > 0 ){
+			if( $this->encrypt->decode( $_POST['id'] ) != 1 ){
+				if( $this->master_model->remove_user() ){
+					redirect( 'master/usuarios/', 'refresh' );
+				}
+			}
+		}
+		redirect( 'master/info/ko', 'refresh' );
+	}
+
+
+
+	/*
+	 *	Recupera toda la informacion del usuario
+	 *
+	 *	Devuelve la informacion via Ajax, Este controlador no debe ser accedido
+	 * por  web solo ajax y devolver informcion en JSON.
+	 *
+	 *	@param 		int 		$id
+	 *	@return 		JSON
+	 */
+	public function usuario_get_by_id_JSON( $id = 0 ){
+		if( $id == '' ){ 
+			$id = 0;
+			echo json_encode( array( 'exito'=>'0' ) );
+			die;
+		}else{
+			$id = $this->encrypt->decode( $id );
+		}		
+		if( $id > 0 ){
+			$respuesta = $this->master_model->get_info_user_by_id( $id );
+			if( $respuesta ){
+				echo json_encode( 
+						array( 
+							'exito' 		=>'1', 
+							'id' 			=> $respuesta[0]->id, 
+							'user' 		=> $respuesta[0]->user,
+							'pass'		=> $respuesta[0]->pass,
+							'nombre' 	=> $respuesta[0]->nombre,
+							'email'		=> $respuesta[0]->email,
+							'menu_id'	=> $respuesta[0]->menu_id,
+							'activo'		=>  $respuesta[0]->activo
+						) 
+					);
+			}else{
+				echo json_encode( array( 'exito'=>'0' ) );
+			}			
+			die;
+		}else{
+			echo json_encode( array( 'exito'=>'0' ) );
+			die;
+		}		
 	}
 	
 	
